@@ -1,9 +1,9 @@
 ## Table of Contents
-- [Run the shell](#Run_the_shell)
-- [Built-in commands](#Built-in_Commands)
-- [Licence](#License)
+- [Run_The_Shell](#Run_The_Shell)
+- [Built-in_Commands](#Built-in_Commands)
+- [License](#License)
 
-## Run_the_shell
+## Run_The_Shell
 ```bash
 make
 ./neoshell
@@ -41,7 +41,7 @@ make
 - mv FILENAME FULLPATH or mv FILENAME *PATHNAME<br>
     Move FILENAME using a FULLPATH or simply by *PATHNAME (added by add_path).<br><br>
     
-## Licence
+## License
 This project is licensed under the MIT License.<br>
 Feel free to customize and expand upon this template to fit your project's needs.<br>
 
