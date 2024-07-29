@@ -16,7 +16,7 @@ make
     Display documentation of all commands.<br><br>
 - quit<br>
     Exit the shell.<br><br>
-- rn OLDFILENAME NEWFILENAM<br>E<br>
+- rn OLDFILENAME NEWFILENAME<br><br>
     Rename OLDFILENAME to NEWFILENAME.<br><br>
 - rm FILENAME<br>
     Delete the file named FILENAME.<br><br>
