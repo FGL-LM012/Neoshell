@@ -9,39 +9,38 @@ make
 ./neoshell
 ```
 
-## Built-in Commands
-
-- <span style="color: yellow;">cd</span> <span style="color: blue;">[DIRECTORY]</span><br>
+## Built-in_Commands
+- cd [DIRECTORY]<br>
     Change the current directory to DIRECTORY.<br><br>
-- <span style="color: yellow;">help</span><br>
+- help<br>
     Display documentation of all commands.<br><br>
-- <span style="color: yellow;">quit</span><br>
+- quit<br>
     Exit the shell.<br><br>
-- <span style="color: yellow;">rn</span> <span style="color: blue;">OLDFILENAME NEWFILENAME</span><br>
+- rn OLDFILENAME NEWFILENAM<br>E<br>
     Rename OLDFILENAME to NEWFILENAME.<br><br>
-- <span style="color: yellow;">rm</span> <span style="color: blue;">FILENAME</span><br>
+- rm FILENAME<br>
     Delete the file named FILENAME.<br><br>
-- <span style="color: yellow;">touch</span> <span style="color: blue;">FILENAME</span><br>
+- touch FILENAME<br>
     Create a new file named FILENAME.<br><br>
-- <span style="color: yellow;">ls</span><br>
+- ls<br>
     List the contents of the current directory.<br><br>
-- <span style="color: yellow;">mkdir</span> <span style="color: blue;">DIRECTORY</span><br>
+- mkdir DIRECTORY<br>
     Create a new directory named DIRECTORY.<br><br>
-- <span style="color: yellow;">rmdir</span> <span style="color: blue;">DIRECTORY</span><br>
+- rmdir DIRECTORY<br>
     Remove the directory named DIRECTORY.<br><br>
-- <span style="color: yellow;">cat</span> <span style="color: blue;">FILENAME</span><br>
+- cat FILENAME<br>
     Display the content of the file named FILENAME.<br><br>
-- <span style="color: yellow;">add_path</span> <span style="color: blue;">FULLPATH PATHNAME</span><br>
+- add_path FULLPATH PATHNAME<br>
     Creates a shortcut using the file paths.txt in /mnt/c/users/username/paths.txt.<br><br>
-- <span style="color: yellow;">rm_path</span> <span style="color: blue;">PATHNAME</span><br>
+- rm_path PATHNAME<br>
     Removes a shortcut from paths.txt by the PATHNAME.<br><br>
-- <span style="color: yellow;">ac</span> <span style="color: blue;">FULLPATH</span> or <span style="color: blue;">*PATHNAME</span><br>
+- ac FULLPATH or ac *PATHNAME<br>
     Access command, access by using the fullpath or more easily with *PATHNAME (created with add_path).<br><br>
-- <span style="color: yellow;">cp</span> <span style="color: blue;">FILENAME COPY_FILENAME</span><br>
+- cp FILENAME COPY_FILENAME<br>
     Copy the contents of FILENAME to COPY_FILENAME.<br><br>
-- <span style="color: yellow;">mv</span> <span style="color: blue;">FILENAME FULLPATH</span> or <span style="color: blue;">FILENAME *PATHNAME</span><br>
+- mv FILENAME FULLPATH or mv FILENAME *PATHNAME<br>
     Move FILENAME using a FULLPATH or simply by *PATHNAME (added by add_path).<br><br>
-
+    
 ## Licence
 This project is licensed under the MIT License.<br>
 Feel free to customize and expand upon this template to fit your project's needs.<br>
