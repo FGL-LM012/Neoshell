@@ -1,22 +1,22 @@
 ## Table of Contents
-- [About](#about)
-- [Usage](#usage)
-- [Features](#features)
-- [License](#license)
+- [Run the shell](#Run_the_shell)
+- [Built-in commands](#Built-in_Commands)
+- [Licence](#License)
 
-## Run the shell
+## Run_the_shell
 ```bash
+make
 ./neoshell
 ```
 
-## Built-in commands
+## Built-in_Commands
 - cd [DIRECTORY]<br>
     Change the current directory to DIRECTORY.<br><br>
 - help<br>
-    Display this help message.<br><br>
+    Display documentation of all commands.<br><br>
 - quit<br>
-    Exit the shell.<br>
-- rn OLDFILENAME NEWFILENAME<br><br>
+    Exit the shell.<br><br>
+- rn OLDFILENAME NEWFILENAM<br>E<br>
     Rename OLDFILENAME to NEWFILENAME.<br><br>
 - rm FILENAME<br>
     Delete the file named FILENAME.<br><br>
@@ -40,7 +40,6 @@
     Copy the contents of FILENAME to COPY_FILENAME.<br><br>
 - mv FILENAME FULLPATH or mv FILENAME *PATHNAME<br>
     Move FILENAME using a FULLPATH or simply by *PATHNAME (added by add_path).<br><br>
-
 
 ## Licence
 This project is licensed under the MIT License.<br>
