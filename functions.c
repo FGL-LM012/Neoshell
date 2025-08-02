@@ -1,8 +1,8 @@
 #include "header.h"
 
-char path [2*MAX_PATH_SIZE];
+char path[2*MAX_PATH_SIZE];
 
-char *Read_Line(char *line, int *line_size){
+char *read_line(char *line, int *line_size){
     int c; 
     int i = 0;
     while((c = getchar()) != EOF && c != '\n'){
@@ -20,7 +20,7 @@ char *Read_Line(char *line, int *line_size){
     return line;
 }
 
-char **Get_Arguments(char *line, char **args, int *args_size){
+char **get_arguments(char *line, char **args, int *args_size){
     int new_word = 1,  counter = 0;
     int len = strlen(line);
     for(int i = 0; i<len; i++){
@@ -43,7 +43,7 @@ char **Get_Arguments(char *line, char **args, int *args_size){
     return args;
 }
 
-int External_Functions(char **args){
+int external_functions(char **args){
     pid_t pid, wpid;
     int status;
     pid = fork();
@@ -72,7 +72,7 @@ int External_Functions(char **args){
 char *builtin_str[] = {
     "cd",
     "help",
-    "quit",
+    "exit",
     "rn",
     "rm",
     "touch",
@@ -89,7 +89,7 @@ char *builtin_str[] = {
 
 
 
-int (*Builtin_Functions[]) (char **) = {
+int (*builtin_functions[]) (char **) = {
     &cd,
     &help,
     &quit,
@@ -107,20 +107,20 @@ int (*Builtin_Functions[]) (char **) = {
     &mv
 };
 
-int Num_Builtins(){
+int num_builtins(){
     return sizeof(builtin_str) / sizeof(char *);
 }
 
-int Execute(char **args){
+int execute(char **args){
     if (args[0] == NULL) {
         return 1;
     }
-    for(int i = 0; i<Num_Builtins(); i++){
+    for(int i = 0; i<num_builtins(); i++){
         if(strcmp(args[0], builtin_str[i]) == 0){
-            return (*Builtin_Functions[i])(args);
+            return (*builtin_functions[i])(args);
         }
     }
-    return External_Functions(args);
+    return external_functions(args);
 }
 
 int cd(char **args){
@@ -141,7 +141,7 @@ int help(char **args) {
     printf(GRAY "\t\tChange the current directory to DIRECTORY.\n" RESET);
     printf(YELLOW "\thelp\n" RESET);
     printf(GRAY "\t\tDisplay this help message.\n" RESET);
-    printf(YELLOW "\tquit\n" RESET);
+    printf(YELLOW "\texit\n" RESET);
     printf(GRAY "\t\tExit the shell.\n" RESET);
     printf(YELLOW "\trn OLDFILENAME NEWFILENAME\n" RESET);
     printf(GRAY "\t\tRename OLDFILENAME to NEWFILENAME.\n" RESET);
@@ -158,9 +158,9 @@ int help(char **args) {
     printf(YELLOW "\tcat FILENAME\n" RESET);
     printf(GRAY "\t\tDisplay the content of the file named FILENAME.\n" RESET);
     printf(YELLOW "\tadd_path FULLPATH PATHNAME\n" RESET);
-    printf(GRAY "\t\tCreates a shortcut using the file paths.txt in /mnt/c/users/username/paths.txt\n" RESET);
+    printf(GRAY "\t\tCreates a shortcut using the file shortcuts.txt in ~/.shortcuts.txt\n" RESET);
     printf(YELLOW "\trm_path PATHNAME\n" RESET);
-    printf(GRAY "\t\tRemoves a shorcut from paths.txt by the PATHNAME\n" RESET);
+    printf(GRAY "\t\tRemoves a shorcut from shorcuts.txt by the PATHNAME\n" RESET);
     printf(YELLOW "\tac FULLPATH or ac *PATHNAME\n" RESET);
     printf(GRAY "\t\tAccess command, access by using the fullpath or more easily with *PATHNAME (created with path_add)\n" RESET);
     printf(YELLOW "\tcp FILENAME COPY_FILENAME\n" RESET);
@@ -302,6 +302,7 @@ int cat(char **args){
                 }
             }else{
                 f = fopen(FILENAME, "r");
+                printf("FILENAME = %s\n", FILENAME);
                 if(f == NULL){
                     fprintf(stderr, RED "Unable to open the file `%s`\n" RESET, args[i]);
                 }else{
@@ -320,24 +321,39 @@ int cat(char **args){
 
 
 int add_path(char **args){
-    if(args[1] == NULL || args[2] == NULL){
-        fprintf(stderr, RED "Too few arguments for command `add_path`\n" RESET);
-    }else{
-        FILE *f = fopen("/mnt/c/users/il-ye/paths.txt", "a");
-        if(f == NULL){
-            perror(RED "Unable to open `paths.txt`" RESET);
-        }else{
-            if(strlen(args[1]) > MAX_PATH_SIZE || strlen(args[1]) > MAX_PATHNAME_SIZE){
-                fprintf(stderr, RED "The fullpath or the pathname is too long\n" RESET);
-            }else{
-                fprintf(f, "%s\t%s\n", args[1], args[2]);
-                fclose(f);
-                printf(MAGENTA "Path added successfully.\n" RESET);
-            }
-        }
-    }
-    
-    return 1;
+   if(args[1] == NULL || args[2] == NULL){
+       fprintf(stderr, RED "Too few arguments for command `add_path`\n" RESET);
+   }else{
+       char shortcuts[500];
+       uid_t uid = getuid();
+       struct passwd *pw;
+       pw = getpwuid(uid);
+       
+       if(pw == NULL){
+           perror(RED "Error getting user info" RESET);
+           return 1;
+       }
+       
+       memset(shortcuts, 0, sizeof(shortcuts));
+       strcpy(shortcuts, "/home/");
+       strcat(shortcuts, pw->pw_name);
+       strcat(shortcuts, "/.shortcuts.txt");
+       FILE *f = fopen(shortcuts, "a");
+       if(f == NULL){
+           perror(RED "Unable to open `shortcuts.txt`" RESET);
+       }else{
+           if(strlen(args[1]) > MAX_PATH_SIZE || strlen(args[2]) > MAX_PATHNAME_SIZE){
+               fprintf(stderr, RED "The fullpath or the pathname is too long\n" RESET);
+               fclose(f);
+           }else{
+               fprintf(f, "%s\t%s\n", args[1], args[2]);
+               fclose(f);
+               printf(MAGENTA "Path added successfully.\n" RESET);
+           }
+       }
+   }
+   
+   return 1;
 }
 
 
@@ -345,27 +361,45 @@ int rm_path(char **args){
     if(args[1] == NULL){
         fprintf(stderr, RED "Too few arguments for command `rm_path`\n" RESET);
     }else{
-        FILE *f = fopen("/mnt/c/users/il-ye/paths.txt", "r");
+        char shortcuts[500];
+        char temp_path[500];  
+        struct passwd *pw;
+        uid_t uid = getuid();
+        pw = getpwuid(uid);
+        
+        if(pw == NULL){  
+            perror(RED "Error getting user info" RESET);
+            return 1;
+        }
+        
+        memset(shortcuts, 0, sizeof(shortcuts));
+        strcpy(shortcuts, "/home/");  
+        strcat(shortcuts, pw->pw_name);  
+        strcpy(temp_path, shortcuts);   
+        strcat(shortcuts, "/.shortcuts.txt");
+        strcat(temp_path, "/.temp.txt");
+        
+        FILE *f = fopen(shortcuts, "r");
         if(f == NULL){
             perror(RED "Error " RESET);
             return 1;
         }
-        FILE *temp = fopen("/mnt/c/users/il-ye/temp.txt", "w");
-        if(temp == NULL){
+        FILE *temp_file = fopen(temp_path, "w");
+        if(temp_file == NULL){
             perror(RED "Error " RESET);
+            fclose(f);
             return 1;
         }
-
         Pa p;
         while(fscanf(f, "%s\t%s\n", p.FULLPATH, p.PATHNAME) == 2){
             if(strcmp(p.PATHNAME, args[1]) != 0){
-                fprintf(temp, "%s\t%s\n", p.FULLPATH, p.PATHNAME);
+                fprintf(temp_file, "%s\t%s\n", p.FULLPATH, p.PATHNAME);
             }
         }
         fclose(f);
-        fclose(temp);
-        remove("/mnt/c/users/il-ye/paths.txt");
-        rename("/mnt/c/users/il-ye/temp.txt", "/mnt/c/users/il-ye/paths.txt");
+        fclose(temp_file);
+        remove(shortcuts);
+        rename(temp_path, shortcuts);
         printf(MAGENTA "Path deleted successfully.\n" RESET);
     }
     return 1;
@@ -382,7 +416,7 @@ int ac(char **args){
                 getcwd(path, sizeof(path));
             }    
         }else{
-            Access_ByShortcut(args[1]);
+            access_byshortcut(args[1]);
         }
     }
     return 1;
@@ -396,7 +430,7 @@ int cp(char **args){
     }else{
         char *FILENAME = custom_strcat(path, args[1]);
         char *COPY_FILENAME = custom_strcat(path, args[2]);
-        if(Copy_File(FILENAME, COPY_FILENAME)){
+        if(copy_file(FILENAME, COPY_FILENAME)){
             printf(MAGENTA "File copied successfully.\n" RESET); 
         }
         free(FILENAME);
@@ -413,7 +447,7 @@ int mv(char **args){
     }else{
         char *FILENAME = custom_strcat(path, args[1]);
         if(*args[2] == '*'){
-            Access_ByShortcut(args[2]);
+            access_byshortcut(args[2]);
         }else{
             if(chdir(args[2]) != 0){
                 perror(RED "Invalid path " RESET);
@@ -421,12 +455,12 @@ int mv(char **args){
             }
             getcwd(path, sizeof(path));
         }
-        char *extension = Get_Extension(args[1]);
+        char *extension = get_extension(args[1]);
         char temp[40] = "temp";
         if(extension != NULL){
             strcat(temp, extension);
             free(extension);}
-        if(Copy_File(FILENAME, temp)){
+        if(copy_file(FILENAME, temp)){
             remove(FILENAME);
             FILENAME = custom_strcat(path, args[1]);
             rename(temp, args[1]);     
@@ -452,7 +486,7 @@ char *custom_strcat(char *str1, char *str2){
     return str;
 }
 
-void Display_UserHostname(){
+void display_username_hostname(){
     //Username
     struct passwd *pw;
     uid_t uid;
@@ -479,7 +513,7 @@ void Display_UserHostname(){
     }
 }
 
-int Copy_File(char *FILENAME, char *COPY_FILENAME){
+int copy_file(char *FILENAME, char *COPY_FILENAME){
     FILE *f = NULL;
     FILE *f_copy = NULL;
 
@@ -489,13 +523,13 @@ int Copy_File(char *FILENAME, char *COPY_FILENAME){
             f = fopen(FILENAME, "rb");
             if (f == NULL) {
                 perror(RED "Unable to open the file " RESET);
-                return 0;
+                return 1;
             }
             f_copy = fopen(COPY_FILENAME, "wb");
             if (f_copy == NULL) {
                 perror(RED "Unable to create the copy file " RESET);
                 fclose(f);
-                return 0;
+                return 1;
             }
             // Copy
             char buffer[1024];
@@ -512,13 +546,13 @@ int Copy_File(char *FILENAME, char *COPY_FILENAME){
     f = fopen(FILENAME, "r");
     if (f == NULL) {
         perror(RED "Unable to open the file " RESET);
-        return 0;
+        return 1;
     }
     f_copy = fopen(COPY_FILENAME, "w");
     if (f_copy == NULL) {
         perror(RED "Unable to create the copy file " RESET);
         fclose(f);
-        return 0;
+        return 1;
     }
     // Copy
     char line[1024];
@@ -530,27 +564,47 @@ int Copy_File(char *FILENAME, char *COPY_FILENAME){
     return 1;
 }
 
-void Access_ByShortcut(char *arg){
-    FILE *f = fopen("/mnt/c/users/il-ye/paths.txt", "r");
-    if(f == NULL){
-        perror(RED "Unable to open `paths.txt`" RESET);
-    }else{
-        Pa p;
-        while(fscanf(f, "%s\t%s\n", p.FULLPATH, p.PATHNAME) == 2){
-            if(strcmp(p.PATHNAME, arg + 1) == 0){
-                if(chdir(p.FULLPATH) != 0){
-                    perror(RED "Invalid path " RESET);
-                }else{
-                    getcwd(path, sizeof(path));
-                }
-                return;
-            }
-        }
-        fprintf(stderr, "Could not find `%s` path\n" RESET, p.PATHNAME);
-    }
+void access_byshortcut(char *arg){
+   char shortcuts[500];
+   uid_t uid = getuid();
+   struct passwd *pw;
+   pw = getpwuid(uid);
+   
+   if(pw == NULL){
+       perror(RED "Error getting user info" RESET);
+       return;
+   }
+   
+   memset(shortcuts, 0, sizeof(shortcuts));
+   strcpy(shortcuts, "/home/");
+   strcat(shortcuts, pw->pw_name);
+   strcat(shortcuts, "/.shortcuts.txt");
+   
+   FILE *f = fopen(shortcuts, "r");
+   if(f == NULL){
+       perror(RED "Unable to open `paths.txt`" RESET);
+   }else{
+       Pa p;
+       int found = 0;
+       while(fscanf(f, "%s\t%s\n", p.FULLPATH, p.PATHNAME) == 2){
+           if(strcmp(p.PATHNAME, arg + 1) == 0){
+               if(chdir(p.FULLPATH) != 0){
+                   perror(RED "Invalid path " RESET);
+               }else{
+                   getcwd(path, sizeof(path));
+               }
+               found = 1;
+               break;
+           }
+       }
+       if(!found){
+           fprintf(stderr, RED "Could not find `%s` path\n" RESET, arg + 1);
+       }
+       fclose(f);
+   }
 }
 
-char *Get_Extension(char *arg) {
+char *get_extension(char *arg) {
     size_t len = strlen(arg);
     const char *dot = strrchr(arg, '.');
     

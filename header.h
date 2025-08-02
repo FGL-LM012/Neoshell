@@ -11,8 +11,6 @@
 #include <sys/stat.h>
 
 
-
-
 #define DEFAULT_LINE_SIZE 300
 #define DEFAULT_ARGS_SIZE 3
 
@@ -37,12 +35,11 @@ typedef struct{
 }Pa;
 
 
-void Display_UserHostname();
 
-char *Read_Line(char *line, int *line_size);
-char **Get_Arguments(char *line, char **args, int *args_size);
-int External_Functions(char **args);
-int Execute(char **args);
+char *read_line(char *line, int *line_size);
+char **get_arguments(char *line, char **args, int *args_size);
+int external_functions(char **args);
+int execute(char **args);
 
 int cd(char **args);
 int help(char **args);
@@ -59,13 +56,14 @@ int rm_path(char **args);
 int ac(char **args);
 int cp(char **args);
 int mv(char **args);
+void display_username_hostname();
 
 
 
 char *custom_strcat(char *str1, char *str2);
-int Copy_File(char *FILENAME, char *COPY_FILENAME);
-void Access_ByShortcut();
-char *Get_Extension(char *arg);
+int copy_file(char *FILENAME, char *COPY_FILENAME);
+void access_byshortcut(char *arg);
+char *get_extension(char *arg);
 
 
 #endif

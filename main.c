@@ -16,11 +16,11 @@ int main(){
 
     printf("\n%s%sWelcome to %sNeoshell%s  ~ Created by %s@LM012%s ~\n" RESET, BOLD, CYAN, YELLOW, CYAN, YELLOW, CYAN);
     do{
-        Display_UserHostname();
+        display_username_hostname();
         printf(BLUE "%s$ " RESET, path);
-        line = Read_Line(line, &line_size);
-        args = Get_Arguments(line, args, &args_size);
-        status = Execute(args);
+        line = read_line(line, &line_size);
+        args = get_arguments(line, args, &args_size);
+        status = execute(args);
     }while(status);
     
     free(line);
