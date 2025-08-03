@@ -30,7 +30,7 @@ int (*builtin_functions[]) (char **) = {&cd, &help, &quit, &rm, ...};
 
 **Process Management** - How external commands actually work:
 - `fork()` creates a child process
-- Child process calls `execvp()` to replace itself with the new program that way the program can continue running
+- Child process calls `execvp()` to replace itself with the new program that way the shell can continue running
 - Parent process waits with `waitpid()` until child finishes
 - This is why you can run any system commands like `nvim`, `fzf`...
 
