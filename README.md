@@ -1,4 +1,4 @@
-# Neoshell 🐚
+# Neoshell 
 
 A simple shell implemented in C, created to explore how shells work under the hood.
 
