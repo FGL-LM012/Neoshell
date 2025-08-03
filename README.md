@@ -47,7 +47,7 @@ make
 `cd`, `ls`, `mkdir`, `rmdir`, `touch`, `rm`, `cat`, `cp`, `mv`, `rn`, `help`, `exit`
 
 **Path shortcuts:**
-- `add_path /some/long/path shortname` - save a path
+- `add_path shortname /some/long/path ` - save a path
 - `ac shortname` - jump to saved path
 - `rm_path shortname` - remove saved path
 
