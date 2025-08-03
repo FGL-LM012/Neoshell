@@ -1,78 +1,60 @@
-## Table of Contents
-- [Run_The_Shell](#Run_The_Shell)
-- [Built-in_Commands](#Built-in_Commands)
-- [License](#License)
+# Neoshell 🐚
 
-## Run_The_Shell
+A simple shell implemented in C, created to explore how shells work under the hood.
+
+## Concepts
+
+**Command Parsing & Tokenization**
+- `read_line()` - reads user input with dynamic buffer resizing
+- `get_arguments()` - tokenizes input into command and arguments by replacing spaces with null terminators
+
+**The Heart of the Shell - Command Execution**
+```c
+int execute(char **args){
+    // Check if it's a builtin command first
+    for(int i = 0; i<num_builtins(); i++){
+        if(strcmp(args[0], builtin_str[i]) == 0){
+            return (*builtin_functions[i])(args);
+        }
+    }
+    // If not builtin, execute as external command
+    return external_functions(args);
+}
+```
+
+**Function Pointer Arrays** - Clean way to map command strings to their functions:
+```c
+char *builtin_str[] = {"cd", "help", "exit", "rm", ...};
+int (*builtin_functions[]) (char **) = {&cd, &help, &quit, &rm, ...};
+```
+
+**Process Management** - How external commands actually work:
+- `fork()` creates a child process
+- Child process calls `execvp()` to replace itself with the new program that way the program can continue running
+- Parent process waits with `waitpid()` until child finishes
+- This is why you can run any system commands like `nvim`, `fzf`...
+
+## How to Run
+
 ```bash
 make
 ./neoshell
 ```
 
-## Built-in_Commands
-```bash
-cd [DIRECTORY]
-```
-Changes the current directory to DIRECTORY.<br><br>
-```bash
-help
-```
-Displays documentation of all commands.<br><br>
-```bash
-quit
-```
-Exits the shell.<br><br>
-```bash
-rn OLDFILENAME NEWFILENAME
-```
-Renames OLDFILENAME to NEWFILENAME.<br><br>
-```bash
-rm FILENAME
-```
-Deletes the file named FILENAME.<br><br>
-```bash
-touch FILENAME
-```
-Create a new file named FILENAME.<br><br>
-```bash
-ls
-```
-Lists the contents of the current directory.<br><br>
-```bash
-mkdir DIRECTORY
-```
-Creates a new directory named DIRECTORY.<br><br>
-```bash
-rmdir DIRECTORY
-```
-Remove the directory named DIRECTORY.<br><br>
-```bash
-cat FILENAME
-```
-Displays the content of the file named FILENAME.<br><br>
-```bash
-add_path FULLPATH PATHNAME
-```
-Creates a shortcut using the file paths.txt in /mnt/c/users/username/paths.txt.<br><br>
-```bash
-rm_path PATHNAME
-```
-Removes a shortcut from paths.txt by the PATHNAME.<br><br>
-```bash
-ac FULLPATH or ac *PATHNAME
-```
-Access command, access by using the fullpath or more easily with *PATHNAME (created with add_path).<br><br>
-```bash
-cp FILENAME COPY_FILENAME
-```
-Copies the contents of FILENAME to COPY_FILENAME.<br><br>
-```bash
-mv FILENAME FULLPATH or mv FILENAME *PATHNAME
-```
- Moves FILENAME using a FULLPATH or simply by *PATHNAME (added by add_path).<br><br>
-    
-## License
-This project is licensed under the MIT License.<br>
-Feel free to customize and expand upon this template to fit your project's needs.<br>
+## Commands
 
+**Built-ins I implemented:**
+`cd`, `ls`, `mkdir`, `rmdir`, `touch`, `rm`, `cat`, `cp`, `mv`, `rn`, `help`, `exit`
+
+**Path shortcuts:**
+- `add_path /some/long/path shortname` - save a path
+- `ac shortname` - jump to saved path
+- `rm_path shortname` - remove saved path
+
+**External commands work automatically** - anything not in the builtin list gets forked and exec'd (explained above)
+
+## File Structure
+- `main.c` - main loop, initialization
+- `functions.c` - all the command implementations  
+- `header.h` - declarations and color definitions
 

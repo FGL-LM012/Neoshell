@@ -14,7 +14,7 @@ int main(){
         exit(1); }
     int status = 1;
 
-    printf("\n%s%sWelcome to %sNeoshell%s  ~ Created by %s@LM012%s ~\n" RESET, BOLD, CYAN, YELLOW, CYAN, YELLOW, CYAN);
+    printf("\n%s%sWelcome to %sNeoshell%s  ~ Created by %s@FGL-LM012%s ~\n" RESET, BOLD, CYAN, YELLOW, CYAN, YELLOW, CYAN);
     do{
         display_username_hostname();
         printf(BLUE "%s$ " RESET, path);

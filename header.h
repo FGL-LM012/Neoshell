@@ -60,10 +60,10 @@ void display_username_hostname();
 
 
 
-char *custom_strcat(char *str1, char *str2);
 int copy_file(char *FILENAME, char *COPY_FILENAME);
 void access_byshortcut(char *arg);
 char *get_extension(char *arg);
+int find(char *str, char c);
 
 
 #endif
