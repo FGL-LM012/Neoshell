@@ -43,7 +43,7 @@ make
 
 ## Commands
 
-**Builtin functions:**
+**Builtin commands:**
 `cd`, `ls`, `mkdir`, `rmdir`, `touch`, `rm`, `cat`, `cp`, `mv`, `rn`, `help`, `exit`
 
 **Path shortcuts:**
