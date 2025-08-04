@@ -1,6 +1,6 @@
 # Neoshell 
 
-A simple shell implemented in C, created to explore how shells work under the hood.
+A simple shell implemented in C, created for leaning purpuses to explore how shells work under the hood.
 
 ## Concepts
 
