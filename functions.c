@@ -163,7 +163,7 @@ int help(char **args) {
     
     // Path Shortcuts
     printf(YELLOW BOLD "🔗 PATH SHORTCUTS:\n" RESET);
-    printf(GREEN "  add_path" RESET " <path> <name> - Save a path with a shortcut name\n");
+    printf(GREEN "  add_path" RESET " <name> <path> - Save a path with a shortcut name\n");
     printf(GREEN "  rm_path" RESET " <name>        - Remove a saved path shortcut\n");
     printf(GRAY "  " RESET "Shortcuts are stored in ~/.shortcuts.txt\n");
     printf("\n");
@@ -178,7 +178,7 @@ int help(char **args) {
     printf(CYAN BOLD "💡 EXAMPLES:\n" RESET);
     printf(MAGENTA "  ls /home/user" RESET "       # List contents of /home/user\n");
     printf(MAGENTA "  cp file.txt backup.txt" RESET " # Copy file.txt to backup.txt\n");
-    printf(MAGENTA "  add_path /home/user/docs mydocs" RESET " # Save shortcut\n");
+    printf(MAGENTA "  add_path mydocs /home/user/docs" RESET " # Save shortcut\n");
     printf(MAGENTA "  ac mydocs" RESET "           # Navigate using shortcut\n");
     printf(MAGENTA "  rn old.txt new.txt" RESET "  # Rename file\n");
     printf("\n");
@@ -607,5 +607,6 @@ char *get_extension(char *arg) {
     
     return ext;
 }
+
 
 
