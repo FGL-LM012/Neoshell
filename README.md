@@ -43,7 +43,7 @@ make
 
 ## Commands
 
-**Built-ins I implemented:**
+**Builtin functions:**
 `cd`, `ls`, `mkdir`, `rmdir`, `touch`, `rm`, `cat`, `cp`, `mv`, `rn`, `help`, `exit`
 
 **Path shortcuts:**
@@ -51,7 +51,7 @@ make
 - `ac shortname` - jump to saved path
 - `rm_path shortname` - remove saved path
 
-**External commands work automatically** - anything not in the builtin list gets forked and exec'd (explained above)
+**External commands work automatically** - anything not in the builtin list gets forked and executed (explained above)
 
 ## File Structure
 - `main.c` - main loop, initialization
